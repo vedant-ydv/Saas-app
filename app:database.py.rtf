@@ -1,0 +1,43 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 from sqlalchemy import Column, Integer, String, ForeignKey\
+from sqlalchemy.orm import relationship\
+from .database import Base\
+\
+\
+class Organization(Base):\
+    __tablename__ = "organizations"\
+\
+    id = Column(Integer, primary_key=True, index=True)\
+    name = Column(String, unique=True, index=True)\
+\
+    users = relationship("User", back_populates="organization")\
+\
+\
+class User(Base):\
+    __tablename__ = "users"\
+\
+    id = Column(Integer, primary_key=True, index=True)\
+    email = Column(String, unique=True, index=True)\
+    password = Column(String)\
+    role = Column(String)\
+\
+    org_id = Column(Integer, ForeignKey("organizations.id"))\
+    organization = relationship("Organization", back_populates="users")\
+\
+    tasks = relationship("Task", back_populates="owner")\
+\
+\
+class Task(Base):\
+    __tablename__ = "tasks"\
+\
+    id = Column(Integer, primary_key=True, index=True)\
+    title = Column(String)\
+\
+    owner_id = Column(Integer, ForeignKey("users.id"))\
+    owner = relationship("User", back_populates="tasks")}
